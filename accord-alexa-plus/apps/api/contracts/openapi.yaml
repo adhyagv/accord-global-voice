@@ -1,0 +1,1482 @@
+openapi: 3.1.0
+info:
+  title: Accord API
+  description: Accord backend core service (simulated integrations only).
+  version: 0.3.0
+paths:
+  /api/assistant/status:
+    get:
+      tags:
+      - assistant
+      summary: Assistant Status
+      description: Return provider readiness without exposing secrets or configuration
+        values.
+      operationId: assistant_status_api_assistant_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Assistant Status Api Assistant Status Get
+  /api/assistant/chat:
+    post:
+      tags:
+      - assistant
+      summary: Assistant Chat
+      description: Answer one message; do not include household records or perform
+        mutations.
+      operationId: assistant_chat_api_assistant_chat_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssistantChatRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Assistant Chat Api Assistant Chat Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/households:
+    post:
+      tags:
+      - households
+      summary: Create Household
+      operationId: create_household_api_households_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHouseholdRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Household Api Households Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/households/{household_id}:
+    get:
+      tags:
+      - households
+      summary: Get Household
+      operationId: get_household_api_households__household_id__get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Household Api Households  Household Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/households/{household_id}/members:
+    post:
+      tags:
+      - households
+      summary: Add Member
+      operationId: add_member_api_households__household_id__members_post
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemberRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Add Member Api Households  Household Id  Members Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - households
+      summary: List Members
+      operationId: list_members_api_households__household_id__members_get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Members Api Households  Household Id  Members
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/households/{household_id}/members/{member_id}/consent:
+    patch:
+      tags:
+      - households
+      summary: Update Member Consent
+      operationId: update_member_consent_api_households__household_id__members__member_id__consent_patch
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: member_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Member Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberConsentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Member Consent Api Households  Household Id  Members  Member
+                  Id  Consent Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/interviews:
+    post:
+      tags:
+      - interviews
+      summary: Start Interview
+      operationId: start_interview_api_interviews_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartInterviewRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Start Interview Api Interviews Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/interviews/{session_id}/submit:
+    post:
+      tags:
+      - interviews
+      summary: Submit Interview
+      operationId: submit_interview_api_interviews__session_id__submit_post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitInterviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Submit Interview Api Interviews  Session Id  Submit
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/interviews/{session_id}/complete:
+    post:
+      tags:
+      - interviews
+      summary: Complete Interview
+      operationId: complete_interview_api_interviews__session_id__complete_post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Complete Interview Api Interviews  Session Id  Complete
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/interviews/{session_id}/private:
+    get:
+      tags:
+      - interviews
+      summary: Get Private Interview
+      operationId: get_private_interview_api_interviews__session_id__private_get
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Private Interview Api Interviews  Session Id  Private
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/constraints/derive/{session_id}:
+    post:
+      tags:
+      - constraints
+      summary: Derive Constraints
+      operationId: derive_constraints_api_constraints_derive__session_id__post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Derive Constraints Api Constraints Derive  Session
+                  Id  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/constraints/members/{member_id}:
+    get:
+      tags:
+      - constraints
+      summary: List Member Constraints
+      operationId: list_member_constraints_api_constraints_members__member_id__get
+      parameters:
+      - name: member_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Member Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Member Constraints Api Constraints Members  Member
+                  Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/constraints/households/{household_id}/shared:
+    get:
+      tags:
+      - constraints
+      summary: List Shared Constraints
+      operationId: list_shared_constraints_api_constraints_households__household_id__shared_get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Shared Constraints Api Constraints Households  Household
+                  Id  Shared Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/generate:
+    post:
+      tags:
+      - agreements
+      summary: Generate Proposal
+      operationId: generate_proposal_api_agreements_generate_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateAgreementRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Generate Proposal Api Agreements Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/households/{household_id}:
+    get:
+      tags:
+      - agreements
+      summary: List Household Agreements
+      operationId: list_household_agreements_api_agreements_households__household_id__get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Household Agreements Api Agreements Households  Household
+                  Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/versions/{version}:
+    get:
+      tags:
+      - agreements
+      summary: Get Proposal
+      operationId: get_proposal_api_agreements__agreement_id__versions__version__get
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Proposal Api Agreements  Agreement Id  Versions  Version  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/history:
+    get:
+      tags:
+      - agreements
+      summary: Get Agreement History
+      operationId: get_agreement_history_api_agreements__agreement_id__history_get
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Agreement History Api Agreements  Agreement Id  History
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/versions/{version}/approve:
+    post:
+      tags:
+      - agreements
+      summary: Approve
+      operationId: approve_api_agreements__agreement_id__versions__version__approve_post
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Approve Api Agreements  Agreement Id  Versions  Version  Approve
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/versions/{version}/veto:
+    post:
+      tags:
+      - agreements
+      summary: Veto
+      operationId: veto_api_agreements__agreement_id__versions__version__veto_post
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Veto Api Agreements  Agreement Id  Versions  Version  Veto
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/versions/{version}/counter:
+    post:
+      tags:
+      - agreements
+      summary: Counter
+      operationId: counter_api_agreements__agreement_id__versions__version__counter_post
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Counter Api Agreements  Agreement Id  Versions  Version  Counter
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agreements/{agreement_id}/versions/{version}/activate:
+    post:
+      tags:
+      - agreements
+      summary: Activate
+      operationId: activate_api_agreements__agreement_id__versions__version__activate_post
+      parameters:
+      - name: agreement_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agreement Id
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Activate Api Agreements  Agreement Id  Versions  Version  Activate
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/assignments:
+    post:
+      tags:
+      - assignments
+      summary: Create Assignment
+      operationId: create_assignment_api_assignments_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAssignmentRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Assignment Api Assignments Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/assignments/households/{household_id}:
+    get:
+      tags:
+      - assignments
+      summary: List Assignments
+      operationId: list_assignments_api_assignments_households__household_id__get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Assignments Api Assignments Households  Household
+                  Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/assignments/{assignment_id}/status:
+    patch:
+      tags:
+      - assignments
+      summary: Update Assignment Status
+      operationId: update_assignment_status_api_assignments__assignment_id__status_patch
+      parameters:
+      - name: assignment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assignment Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAssignmentStatusRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Assignment Status Api Assignments  Assignment
+                  Id  Status Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/monitoring/signals:
+    post:
+      tags:
+      - monitoring
+      summary: Record Signal
+      operationId: record_signal_api_monitoring_signals_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordMonitoringSignalRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Record Signal Api Monitoring Signals Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/monitoring/signals/households/{household_id}:
+    get:
+      tags:
+      - monitoring
+      summary: List Signals
+      operationId: list_signals_api_monitoring_signals_households__household_id__get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Signals Api Monitoring Signals Households  Household
+                  Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/drift/generate:
+    post:
+      tags:
+      - drift
+      summary: Generate Drift
+      operationId: generate_drift_api_drift_generate_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateDriftReportRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Generate Drift Api Drift Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/drift/{drift_id}:
+    get:
+      tags:
+      - drift
+      summary: Get Drift
+      operationId: get_drift_api_drift__drift_id__get
+      parameters:
+      - name: drift_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drift Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Drift Api Drift  Drift Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/drift/renegotiations/start:
+    post:
+      tags:
+      - drift
+      summary: Start Renegotiation
+      operationId: start_renegotiation_api_drift_renegotiations_start_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartRenegotiationRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Start Renegotiation Api Drift Renegotiations Start
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/expenses:
+    post:
+      tags:
+      - expenses
+      summary: Create Expense
+      operationId: create_expense_api_expenses_post
+      parameters:
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExpenseRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Expense Api Expenses Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/expenses/households/{household_id}:
+    get:
+      tags:
+      - expenses
+      summary: List Expenses
+      operationId: list_expenses_api_expenses_households__household_id__get
+      parameters:
+      - name: household_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Household Id
+      - name: x-member-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Member-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Expenses Api Expenses Households  Household Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/demo/roommates/reset:
+    post:
+      tags:
+      - demo
+      summary: Reset Demo Roommates
+      description: 'DEVELOPMENT/DEMO ONLY: reset deterministic three-roommate scenario.'
+      operationId: reset_demo_roommates_api_demo_roommates_reset_post
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Reset Demo Roommates Api Demo Roommates Reset Post
+  /healthz:
+    get:
+      tags:
+      - system
+      summary: Healthz
+      operationId: healthz_healthz_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Healthz Healthz Get
+components:
+  schemas:
+    AddMemberRequest:
+      properties:
+        displayName:
+          type: string
+          title: Displayname
+        role:
+          type: string
+          title: Role
+      type: object
+      required:
+      - displayName
+      - role
+      title: AddMemberRequest
+    AssistantChatRequest:
+      properties:
+        message:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Message
+      type: object
+      required:
+      - message
+      title: AssistantChatRequest
+    CounterRequest:
+      properties:
+        memberId:
+          type: string
+          title: Memberid
+        proposalDeltaSummary:
+          type: string
+          title: Proposaldeltasummary
+      type: object
+      required:
+      - memberId
+      - proposalDeltaSummary
+      title: CounterRequest
+    CreateAssignmentRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        memberId:
+          type: string
+          title: Memberid
+        task:
+          type: string
+          title: Task
+        frequency:
+          type: string
+          title: Frequency
+        estimatedEffort:
+          type: number
+          title: Estimatedeffort
+        assignedDate:
+          type: string
+          format: date-time
+          title: Assigneddate
+      type: object
+      required:
+      - householdId
+      - memberId
+      - task
+      - frequency
+      - estimatedEffort
+      - assignedDate
+      title: CreateAssignmentRequest
+    CreateExpenseRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        payerMemberId:
+          type: string
+          title: Payermemberid
+        description:
+          type: string
+          maxLength: 160
+          minLength: 1
+          title: Description
+        amount:
+          type: number
+          maximum: 1000000.0
+          exclusiveMinimum: 0.0
+          title: Amount
+        category:
+          type: string
+          maxLength: 60
+          minLength: 1
+          title: Category
+          default: shared
+        expenseDate:
+          type: string
+          format: date-time
+          title: Expensedate
+      type: object
+      required:
+      - householdId
+      - payerMemberId
+      - description
+      - amount
+      - expenseDate
+      title: CreateExpenseRequest
+    CreateHouseholdRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+        scenarioMetadata:
+          additionalProperties: true
+          type: object
+          title: Scenariometadata
+      type: object
+      required:
+      - name
+      title: CreateHouseholdRequest
+    GenerateAgreementRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        derivedConstraintIds:
+          items:
+            type: string
+          type: array
+          title: Derivedconstraintids
+      type: object
+      required:
+      - householdId
+      - derivedConstraintIds
+      title: GenerateAgreementRequest
+    GenerateDriftReportRequest:
+      properties:
+        agreementId:
+          type: string
+          title: Agreementid
+        version:
+          type: integer
+          title: Version
+      type: object
+      required:
+      - agreementId
+      - version
+      title: GenerateDriftReportRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RecordMonitoringSignalRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        assignmentReference:
+          type: string
+          title: Assignmentreference
+        memberReference:
+          type: string
+          title: Memberreference
+        expectedContribution:
+          type: number
+          title: Expectedcontribution
+        observedContribution:
+          type: number
+          title: Observedcontribution
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+      type: object
+      required:
+      - householdId
+      - assignmentReference
+      - memberReference
+      - expectedContribution
+      - observedContribution
+      - timestamp
+      title: RecordMonitoringSignalRequest
+    StartInterviewRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        memberId:
+          type: string
+          title: Memberid
+      type: object
+      required:
+      - householdId
+      - memberId
+      title: StartInterviewRequest
+    StartRenegotiationRequest:
+      properties:
+        householdId:
+          type: string
+          title: Householdid
+        driftId:
+          type: string
+          title: Driftid
+      type: object
+      required:
+      - householdId
+      - driftId
+      title: StartRenegotiationRequest
+    SubmitInterviewRequest:
+      properties:
+        transcriptReference:
+          type: string
+          title: Transcriptreference
+        answers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Answers
+      type: object
+      required:
+      - transcriptReference
+      title: SubmitInterviewRequest
+    UpdateAssignmentStatusRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - scheduled
+          - in_progress
+          - completed
+          - missed
+          title: Status
+      type: object
+      required:
+      - status
+      title: UpdateAssignmentStatusRequest
+    UpdateMemberConsentRequest:
+      properties:
+        consentStatus:
+          type: string
+          enum:
+          - pending
+          - granted
+          - revoked
+          title: Consentstatus
+      type: object
+      required:
+      - consentStatus
+      title: UpdateMemberConsentRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
